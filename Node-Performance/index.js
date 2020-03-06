@@ -5,6 +5,9 @@ if(cluster.isMaster) {
     // Cause index.js to be executed *again* but in child mode
     console.log('IS MASTER: ', cluster.isMaster); 
     cluster.fork();
+    // cluster.fork();
+    // cluster.fork();
+    // cluster.fork();
 } else {
     console.log('IS MASTER: ', cluster.isMaster); 
     const express = require('express');
@@ -20,6 +23,10 @@ if(cluster.isMaster) {
         doWork(5000); 
         res.send('HI THERE!');
     });
-    
+
+    app.get('/fast', (req, res) => { 
+        res.send('THIS WAS FAST!');
+    }); 
+
     app.listen(3000, () => console.log('Server is running...')); 
 }
