@@ -1,27 +1,24 @@
+process.env.UV_THREADPOOL_SIZE = 1;
 const cluster = require('cluster');
 
 // Is the file being executed in master mode?
 if(cluster.isMaster) {
     // Cause index.js to be executed *again* but in child mode
-    console.log('IS MASTER: ', cluster.isMaster); 
+    console.log('Is master fork: ', cluster.isMaster); 
     cluster.fork();
-    // cluster.fork();
-    // cluster.fork();
-    // cluster.fork();
+
 } else {
-    console.log('IS MASTER: ', cluster.isMaster); 
+    console.log('Is master fork: ', cluster.isMaster); 
     const express = require('express');
     const app = express();
-    
-    // computation intensive code, simulating a large request
-    function doWork(duration) {
-        const start = Date.now();
-        while(Date.now() - start < duration) {}
-    }
+    const crypto = require('crypto');
     
     app.get('/', (req, res) => {
-        doWork(5000); 
-        res.send('HI THERE!');
+        const start = Date.now();
+        crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
+            console.log(`PBKDF2 response time: ${Date.now() - start}ms `);
+            res.status(200).send('PBKDF2 was called.');
+        });
     });
 
     app.get('/fast', (req, res) => { 
