@@ -3,12 +3,12 @@ const cluster = require('cluster');
 
 // Is the file being executed in master mode?
 if(cluster.isMaster) {
-    // Cause index.js to be executed *again* but in child mode
+    // Cause index.js to be executed *again* but in worker mode
     console.log('Is master fork: ', cluster.isMaster); 
     cluster.fork();
 
 } else {
-    console.log('Is master fork: ', cluster.isMaster); 
+    console.log('Is worker fork: ', cluster.isWorker); 
     const express = require('express');
     const app = express();
     const crypto = require('crypto');
