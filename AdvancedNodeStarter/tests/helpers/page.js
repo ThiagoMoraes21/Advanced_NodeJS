@@ -42,6 +42,10 @@ class CustomPage {
         await this.page.goto('localhost:3000'); // refresh page after set cookie session
         await this.page.waitFor('a[href="/auth/logout"]');
     }
+
+    async getContentsOf(selector) {
+        return this.page.$eval(selector, el => el.innerHTML);
+    }
 }
 
 module.exports = CustomPage;
