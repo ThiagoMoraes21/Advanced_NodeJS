@@ -53,28 +53,12 @@ test('Clicking login starts oauth flow', async() => {
     3. Sign the session object with keygrip
     4. Set the session and signature on our page instance as cookies
 */
-test.only('When sign in, shows logout button', async() => {
+test('When sign in, shows logout button', async() => {
     const id = "5f08997c84feda0517a14483";
 
-    const Buffer = require('safe-buffer').Buffer;
-    const sessionObject = {
-        passport: {
-            user: id
-        }
-    }
-
-    const sessionString = Buffer.from(
-        JSON.stringify(sessionObject)
-    ).toString('base64');
-
-    const Keygrip = require('keygrip');
-    const keys = require('../config/keys');
-    const keygrip = new Keygrip([keys.cookieKey]);
-    const sig = keygrip.sign('session=' + sessionString);
-    
     await page.setCookie({ name: 'session', value: sessionString });
     await page.setCookie({ name: 'session.sig', value: sig });
-    await page.goto('localhost:3000'); // refresh page
+    await page.goto('localhost:3000'); // refresh page after set cookie session
     await page.waitFor('a[href="/auth/logout"]');
 
     const text = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML);
