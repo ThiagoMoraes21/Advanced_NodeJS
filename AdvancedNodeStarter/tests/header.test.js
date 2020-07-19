@@ -11,26 +11,16 @@
         5: 'Write assertion to make sure content is correct'
     }
 */
-
-/* 
-    We use puppeteer to create browsers
-    and use browsers to create pages. 
-*/
-const puppeteer = require('puppeteer');
-const sessionFactory = require('./factories/sessionFactory');
-const userFactory = require('./factories/userFactory');
-let page, browser;
+const Page = require('./helpers/page');
+let page;
 
 beforeEach(async () => {
-    browser = await puppeteer.launch({
-        headless: true
-    });
-    page = await browser.newPage();
+    page = await Page.build();
     await page.goto('localhost:3000');
 });
 
 afterEach(async () => {
-    await browser.close();
+    await page.close();
 });
 
 test('The header has the correct text', async () => {
@@ -48,22 +38,9 @@ test('Clicking login starts oauth flow', async() => {
 });
 
 
-/*
-    Faking a cookie session to make authenticated requests
-    1. Create a page instance
-    2. Take an existing user ID and genarete a fake session object with it
-    3. Sign the session object with keygrip
-    4. Set the session and signature on our page instance as cookies
-*/
+
 test('When sign in, shows logout button', async() => {
-    const user = await userFactory();
-    const { session, sig } = sessionFactory(user);
-
-    await page.setCookie({ name: 'session', value: session });
-    await page.setCookie({ name: 'session.sig', value: sig });
-    await page.goto('localhost:3000'); // refresh page after set cookie session
-    await page.waitFor('a[href="/auth/logout"]');
-
+    await page.login();
     const text = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML);
 
     expect(text).toEqual('Logout');
