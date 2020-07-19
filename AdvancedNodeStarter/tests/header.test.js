@@ -28,7 +28,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    // await browser.close();
+    await browser.close();
 });
 
 test('The header has the correct text', async () => {
@@ -75,4 +75,9 @@ test.only('When sign in, shows logout button', async() => {
     await page.setCookie({ name: 'session', value: sessionString });
     await page.setCookie({ name: 'session.sig', value: sig });
     await page.goto('localhost:3000'); // refresh page
+    await page.waitFor('a[href="/auth/logout"]');
+
+    const text = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML);
+
+    expect(text).toEqual('Logout');
 });
