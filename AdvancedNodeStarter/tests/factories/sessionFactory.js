@@ -5,7 +5,7 @@ const keygrip = new Keygrip([keys.cookieKey]);
 
 
 // Creates a cookie session and signature based on the current user model
-module.exports = (user) => {
+module.exports = user => {
     const sessionObject = {
         passport: {
             user: user._id.toString()
