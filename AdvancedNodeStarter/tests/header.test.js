@@ -17,6 +17,7 @@
     and use browsers to create pages. 
 */
 const puppeteer = require('puppeteer');
+const sessionFactory = require('./factories/sessionFactory');
 let page, browser;
 
 beforeEach(async () => {
@@ -54,9 +55,9 @@ test('Clicking login starts oauth flow', async() => {
     4. Set the session and signature on our page instance as cookies
 */
 test('When sign in, shows logout button', async() => {
-    const id = "5f08997c84feda0517a14483";
+    const { session, sig } = sessionFactory();
 
-    await page.setCookie({ name: 'session', value: sessionString });
+    await page.setCookie({ name: 'session', value: session });
     await page.setCookie({ name: 'session.sig', value: sig });
     await page.goto('localhost:3000'); // refresh page after set cookie session
     await page.waitFor('a[href="/auth/logout"]');
