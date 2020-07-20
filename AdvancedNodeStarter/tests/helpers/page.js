@@ -9,7 +9,7 @@ class CustomPage {
             and use browsers to create pages. 
         */
         const browser = await puppeteer.launch({
-            headless: false
+            headless: true
         });
 
         const page = await browser.newPage();
@@ -39,7 +39,7 @@ class CustomPage {
     
         await this.page.setCookie({ name: 'session', value: session });
         await this.page.setCookie({ name: 'session.sig', value: sig });
-        await this.page.goto('localhost:3000'); // refresh page after set cookie session
+        await this.page.goto('localhost:3000/blogs'); // refresh page after set cookie session
         await this.page.waitFor('a[href="/auth/logout"]');
     }
 
