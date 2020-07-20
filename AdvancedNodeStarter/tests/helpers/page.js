@@ -9,7 +9,7 @@ class CustomPage {
             and use browsers to create pages. 
         */
         const browser = await puppeteer.launch({
-            headless: true
+            headless:  false
         });
 
         const page = await browser.newPage();
