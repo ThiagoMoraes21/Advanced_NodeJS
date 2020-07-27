@@ -37,34 +37,33 @@ describe('When logged in', async () => {
             expect(text).toEqual('Please confirm your entries');
         });
 
-        // test('Submitting then saving adds blog to index page', async () => {
+        test('Submitting then saving adds blog to index page', async () => {
+            await page.waitFor('.green');
+            await page.click('button.green');
+            await page.waitFor('.card');
+            await page.waitFor('p');
 
-        //     await page.click('button.green');
-        //     await page.waitFor('.card');
-        //     await page.waitFor('p');
+            const title = await page.getContentsOf('.card-title');
+            const content = await page.getContentsOf('p');
 
-        //     const title = await page.getContentsOf('.card-title');
-        //     const content = await page.getContentsOf('p');
-
-        //     expect(title).toEqual('My Title');
-        //     expect(content).toEqual('My Content');
-        // });
-    });
-
-    describe('And using invalid inputs', async () => {
-        beforeEach(async () => {
-            await page.click('form button');
-        });
-
-        test('The form shows an error message', async () => {
-            await page.waitFor('.title');
-            await page.waitFor('.content');
-            await page.waitFor('.red-text');
-            const titleError = await page.getContentsOf('.title .red-text');
-            const contentError = await page.getContentsOf('.content .red-text');
-
-            expect(titleError).toEqual('You must provide a value');
-            expect(contentError).toEqual('You must provide a value');
+            expect(title).toEqual('My Title');
+            expect(content).toEqual('My Content');
         });
     });
+
+    // describe('And using invalid inputs', async () => {
+    //     beforeEach(async () => {
+    //         await page.waitFor('form');
+    //         await page.click('form button');
+    //     });
+
+    //     test('The form shows an error message', async () => {
+    //         // await page.waitFor('form');
+    //         const titleError = await page.getContentsOf('.title .red-text');
+    //         const contentError = await page.getContentsOf('.content .red-text');
+
+    //         expect(titleError).toEqual('You must provide a value');
+    //         expect(contentError).toEqual('You must provide a value');
+    //     });
+    // });
 });
