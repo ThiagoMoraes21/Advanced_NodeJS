@@ -1,63 +1,65 @@
 const Page = require('./helpers/page');
 let page;
 
-beforeEach(async() => {
+beforeEach(async () => {
     page = await Page.build();
     await page.goto('localhost:3000');
 });
 
-afterEach(async() => {
+afterEach(async () => {
     await page.close();
 });
 
-describe('When logged in', async() => {
-    beforeEach(async() => {
+describe('When logged in', async () => {
+    beforeEach(async () => {
         await page.login();
         await page.click('a.btn-floating');
     });
 
-    test('Can see blog create form', async() => { 
+    test('Can see blog create form', async () => {
         const url = await page.url();
         const label = await page.getContentsOf('form label');
-    
+
         expect(url).toMatch(/blogs\/new/);
         expect(label).toEqual('Blog Title');
     });
 
-    describe('And using valid inputs', async() => {
-        beforeEach(async() => {
+    describe('And using valid inputs', async () => {
+        beforeEach(async () => {
             await page.type('.title input', 'My Title');
             await page.type('.content input', 'My Content');
             await page.click('form button');
         });
-        
-        test('Submitting takes user to review screen', async() => {
+
+        test('Submitting takes user to review screen', async () => {
+            await page.waitFor('h5');
             const text = await page.getContentsOf('h5');
             expect(text).toEqual('Please confirm your entries');
         });
 
-        // test('Submitting then saving adds blog to index page', async() => {
-        //     try{
-        //         await page.click('button.green');
-        //         await page.waitFor('.card');
-    
-        //         const title = await page.getContentsOf('.card-title');
-        //         const content = await page.getContentsOf('p');
-    
-        //         expect(title).toEqual('My Title');
-        //         expect(content).toEqual('My Content');
-        //     } catch(err) {
-        //         console.log('ERROR ===============================> ', err);
-        //     }
+        // test('Submitting then saving adds blog to index page', async () => {
+
+        //     await page.click('button.green');
+        //     await page.waitFor('.card');
+        //     await page.waitFor('p');
+
+        //     const title = await page.getContentsOf('.card-title');
+        //     const content = await page.getContentsOf('p');
+
+        //     expect(title).toEqual('My Title');
+        //     expect(content).toEqual('My Content');
         // });
     });
 
-    describe('And using invalid inputs', async() => {
-        beforeEach(async() => {
+    describe('And using invalid inputs', async () => {
+        beforeEach(async () => {
             await page.click('form button');
         });
 
-        test('The form shows an error message', async() => {
+        test('The form shows an error message', async () => {
+            await page.waitFor('.title');
+            await page.waitFor('.content');
+            await page.waitFor('.red-text');
             const titleError = await page.getContentsOf('.title .red-text');
             const contentError = await page.getContentsOf('.content .red-text');
 
